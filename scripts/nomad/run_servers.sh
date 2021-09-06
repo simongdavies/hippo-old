@@ -30,7 +30,8 @@ mkdir -p log
 
 # https://www.nomadproject.io/docs/faq#q-how-to-connect-to-my-host-network-when-using-docker-desktop-windows-and-macos
 
-IP_ADDRESS=$(ipconfig getifaddr en0)
+# IP_ADDRESS=$(ipconfig getifaddr en0)
+IP_ADDRESS='172.19.18.189'
 
 echo "Starting consul..."
 consul agent -dev \
@@ -67,7 +68,7 @@ vault kv put kv/wagi-env foo=bar
 echo "Starting nomad..."
 nomad agent -dev \
   -config nomad/nomad.hcl \
-  -network-interface en0 \
+  -network-interface eth0 \
   -data-dir "${PWD}/data/nomad" \
   -consul-address "${IP_ADDRESS}:8500" \
   -vault-address http://127.0.0.1:8200 \
