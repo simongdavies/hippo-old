@@ -11,12 +11,13 @@
             "NODE_VERSION": "lts/*",
             "HIPPO_VERSION": "v0.7.0",
             "BINDLE_VERSION": "v0.4.1",
-            "WAGI_VERSION": "v0.3.0"
+            "WAGI_VERSION": "v0.3.0",
+            "TRAEFIK_VERSION": "v2.5.2"
         }
     },
     // Set *default* container specific settings.json values on container create.
     "settings": {
-        "remote.autoForwardPorts": false
+        "remote.autoForwardPorts": true
     },
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
@@ -25,13 +26,18 @@
     "containerEnv": {
         "BINDLE_URL": "http://localhost:8080/v1",
         "HIPPO_URL": "https://localhost:5001",
-        "GLOBAL_AGENT_FORCE_GLOBAL_AGENT": "false"
+        "GLOBAL_AGENT_FORCE_GLOBAL_AGENT": "false",
+        "BINDLE_DIRECTORY" : "bindleserver"
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // 5002 is the default YARP HTTP port, this is forwarded as the certificate for the YARP server is not trusted and therefore HTTPS cannot be proxied.
     "forwardPorts": [
+        4646,
         5001,
         5002,
+        8081,
+        8200,
+        8500,
         32768,
         32769,
         32770
@@ -42,12 +48,28 @@
     // restore and build the application, add the dev cert. 
     "postCreateCommand": "cd Hippo && dotnet restore && npm run build && dotnet build && dotnet dev-certs https",
     "portsAttributes": {
+        "4646": {
+            "label": "Nomad",
+            "protocol": "https"
+        },
         "5001": {
             "label": "Hippo HTTPS Port",
             "protocol": "https"
         },
         "5002": {
             "label": "YARP HTTP",
+            "protocol": "https"
+        },
+        "8081": {
+            "label": "Traefik",
+            "protocol": "https"
+        },
+        "8200": {
+            "label": "Vault",
+            "protocol": "https"
+        },
+        "8500": {
+            "label": "Consul",
             "protocol": "https"
         },
         "32768": {
