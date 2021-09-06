@@ -30,7 +30,7 @@ RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && npm install -g 
 RUN su vscode -c "umask 0002 && cd /tmp && mkdir yowasm && cd yowasm && curl -fsSLo ./yowasm.tar.gz https://github.com/deislabs/yo-wasm/releases/download/v0.0.4%2Bpreview1/generator-wasm-0.0.3.tgz && . /usr/local/share/nvm/nvm.sh && npm install -g ./yowasm.tar.gz"
 
 # Install pre-requisites for NOMAD scheduler
-RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && sudo apt-get update export DEBIAN_FRONTEND=noninteractive && apt-get -y install --no-install-recommends nomad consul vault
+RUN curl -fsSLo hashicorp.pub https://apt.releases.hashicorp.com/gpg && apt-key add hashicorp.pub && apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main" && sudo apt-get update export DEBIAN_FRONTEND=noninteractive && apt-get -y install --no-install-recommends nomad consul vault
 
 # Install traefik
 ARG TRAEFIK_VERSION="v2.5.2"
