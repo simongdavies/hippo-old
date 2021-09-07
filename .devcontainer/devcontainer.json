@@ -17,7 +17,7 @@
     },
     // Set *default* container specific settings.json values on container create.
     "settings": {
-        "remote.autoForwardPorts": true
+        "remote.autoForwardPorts": false
     },
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
@@ -27,20 +27,31 @@
         "BINDLE_URL": "http://localhost:8080/v1",
         "HIPPO_URL": "https://localhost:5001",
         "GLOBAL_AGENT_FORCE_GLOBAL_AGENT": "false",
-        "BINDLE_DIRECTORY" : "/workspaces/hippo/bindleserver/data"
+        // This places bindle server data in the workspace so that state is retained across multiple invocations of the bindle server 
+        // Delete this folder and Hippo/hippo.db.* files to reset Hippo
+        "BINDLE_DIRECTORY" : "${containerWorkspaceFolder}/bindleserver/data",
+        "IP_ADDRESS" : "127.0.0.1"
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
-    // 5002 is the default YARP HTTP port, this is forwarded as the certificate for the YARP server is not trusted and therefore HTTPS cannot be proxied.
+    // 4646 is the Nomad Web UI HTTP port
+    // 5000 is the Hippo HTTP Port
+    // 5001 is the Hippo HTTPS Port
+    // 5002 is the YARP HTTP Port, this is forwarded as the certificate for the YARP server is not trusted and therefore HTTPS cannot be proxied.
+    // 5003 is the YARP HTTPS Port
+    // 8081 is the Traefik Web UI HTTP Port
+    // 8200 is the Vault Web UI HTTP Port
+    // 8500 is the Consul Web UI Port
+    // 32768 is the first port that is used by applications launched from Hippo enbled schedulers, normally this would not be accessed directly but through the proxy endpoint.
     "forwardPorts": [
         4646,
+        5000,
         5001,
         5002,
+        5003,
         8081,
         8200,
         8500,
-        32768,
-        32769,
-        32770
+        32768
     ],
     // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
     "remoteUser": "vscode",
@@ -49,37 +60,36 @@
     "postCreateCommand": "cd Hippo && dotnet restore && npm run build && dotnet build && dotnet dev-certs https",
     "portsAttributes": {
         "4646": {
-            "label": "Nomad",
-            "protocol": "https"
+            "label": "Nomad Web UI",
+            "protocol": "http"
         },
         "5001": {
             "label": "Hippo HTTPS Port",
             "protocol": "https"
         },
         "5002": {
-            "label": "YARP HTTP",
-            "protocol": "https"
+            "label": "YARP HTTP Endpoint",
+            "protocol": "http"
         },
         "8081": {
-            "label": "Traefik",
-            "protocol": "https"
+            "label": "Traefik Web UI",
+            "protocol": "http"
+        },
+        "8088": {
+            "label": "Traefik Proxy HTTP Endpoint",
+            "protocol": "http"
         },
         "8200": {
-            "label": "Vault",
-            "protocol": "https"
+            "label": "Vault Web UI",
+            "protocol": "http"
         },
         "8500": {
-            "label": "Consul",
-            "protocol": "https"
+            "label": "Consul Web UI",
+            "protocol": "http"
         },
         "32768": {
-            "label": "Application Channel HTTP Port"
-        },
-        "32769": {
-            "label": "Application Channel HTTP Port"
-        },
-        "32770": {
-            "label": "Application Channel HTTP Port"
+            "label": "Application Channel HTTP Port",
+            "protocol": "http"
         }
     }
 }

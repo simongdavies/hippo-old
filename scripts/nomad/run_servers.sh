@@ -30,8 +30,9 @@ mkdir -p log
 
 # https://www.nomadproject.io/docs/faq#q-how-to-connect-to-my-host-network-when-using-docker-desktop-windows-and-macos
 
-# IP_ADDRESS=$(ipconfig getifaddr en0)
-IP_ADDRESS='127.0.0.1'
+if [ -z "$IP_ADDRESS" ]; then
+    IP_ADDRESS=$(ipconfig getifaddr en0)
+fi
 
 echo "Starting consul..."
 consul agent -dev \
