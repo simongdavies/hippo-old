@@ -27,7 +27,7 @@
         "BINDLE_URL": "http://localhost:8080/v1",
         "HIPPO_URL": "https://localhost:5001",
         "GLOBAL_AGENT_FORCE_GLOBAL_AGENT": "false",
-        "BINDLE_DIRECTORY" : "bindleserver"
+        "BINDLE_DIRECTORY" : "/workspaces/hippo/bindleserver/data"
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // 5002 is the default YARP HTTP port, this is forwarded as the certificate for the YARP server is not trusted and therefore HTTPS cannot be proxied.
