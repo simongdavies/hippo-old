@@ -34,21 +34,19 @@
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // 4646 is the Nomad Web UI HTTP port
-    // 5000 is the Hippo HTTP Port
     // 5001 is the Hippo HTTPS Port
-    // 5002 is the YARP HTTP Port, this is forwarded as the certificate for the YARP server is not trusted and therefore HTTPS cannot be proxied.
-    // 5003 is the YARP HTTPS Port
+    // 5002 is the YARP HTTP Port, this is forwarded as the certificate for the YARP server is not trusted and therefore HTTPS cannot be proxied, applications are exposed here when using the default and Wagi schedulers.
     // 8081 is the Traefik Web UI HTTP Port
+    // 8088 is the Traefik Proxy HTTP Port, applications are exposed here when using the nomad scheduler
     // 8200 is the Vault Web UI HTTP Port
     // 8500 is the Consul Web UI Port
-    // 32768 is the first port that is used by applications launched from Hippo enbled schedulers, normally this would not be accessed directly but through the proxy endpoint.
+    // 32768 is the first port that is used by applications launched from Hippo enbled schedulers, normally this would not be accessed directly but through the proxy endpoint on port 5002 or 8088.
     "forwardPorts": [
         4646,
-        5000,
         5001,
         5002,
-        5003,
         8081,
+        8088,
         8200,
         8500,
         32768
